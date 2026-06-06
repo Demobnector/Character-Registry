@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modular Character Registry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <button id="burger-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <div class="logo"><div class="dot"></div>REGISTRY</div>
+    <span class="tagline">// Modular Character Database</span>
+    <span class="count-badge" id="char-count">0 Characters</span>
+  </header>
+  <div id="main-body">
+    <div id="sidebar-overlay"></div>
+    <aside id="sidebar">
+      <div id="sidebar-header">
+        <div id="search-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="search-input" placeholder="Search characters...">
+        </div>
+      </div>
+      <div id="char-list"></div>
+      <div id="sidebar-footer">
+        <button class="footer-btn" id="add-char-folder" style="display:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Character</button>
+        <button class="footer-btn" id="reload-manifest"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>Reload</button>
+      </div>
+    </aside>
+    <main id="content">
+      <div id="landing">
+        <h1>Modular Registry</h1>
+        <p>Each character lives in its own folder under <code>characters/</code><br>Add a folder name to the manifest array to load a new profile.</p>
+        <div class="splash-grid" id="splash-grid"></div>
+      </div>
+      <div id="profile-view">
+        <div id="profile-hero">
+          <div class="hero-portrait" id="hero-portrait"></div>
+          <div class="hero-info">
+            <div class="hero-name" id="hero-name"></div>
+            <div class="hero-subtitle" id="hero-subtitle"></div>
+            <div class="hero-tags" id="hero-tags"></div>
+          </div>
+          <div class="hero-stats" id="hero-stats"></div>
+        </div>
+        <div id="tab-bar">
+          <button class="tab-btn active" data-tab="overview">Overview</button>
+          <button class="tab-btn" data-tab="gallery">Gallery</button>
+          <button class="tab-btn" data-tab="video">Videos</button>
+          <button class="tab-btn" data-tab="extra">Extra</button>
+        </div>
+        <div class="tab-panel active" id="tab-overview"></div>
+        <div class="tab-panel" id="tab-gallery"></div>
+        <div class="tab-panel" id="tab-video"></div>
+        <div class="tab-panel" id="tab-extra"></div>
+      </div>
+    </main>
+  </div>
+</div>
+<div id="lightbox">
+  <div id="lightbox-inner">
+    <button id="lightbox-close">✕</button>
+    <div id="lightbox-img-wrap">
+      <img id="lightbox-img" style="display:none;">
+      <div id="lightbox-placeholder" style="padding:60px;text-align:center;">No image</div>
+    </div>
+    <div id="lightbox-info">
+      <div id="lightbox-title"></div>
+      <div id="lightbox-desc"></div>
+    </div>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
