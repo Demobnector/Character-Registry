@@ -65,9 +65,17 @@
 <div id="lightbox">
   <div id="lightbox-inner">
     <button id="lightbox-close">✕</button>
-    <div id="lightbox-img-wrap">
-      <img id="lightbox-img" style="display:none;">
-      <div id="lightbox-placeholder" style="padding:60px;text-align:center;">No image</div>
+    <div id="lightbox-img-container">
+      <div id="lightbox-img-wrap">
+        <img id="lightbox-img" style="display:none;">
+        <div id="lightbox-placeholder" style="padding:60px;text-align:center;">No image</div>
+      </div>
+      <div class="lightbox-toolbar">
+        <button class="lightbox-zoom-btn" id="zoom-in-btn" title="Zoom In">➕</button>
+        <button class="lightbox-zoom-btn" id="zoom-out-btn" title="Zoom Out">➖</button>
+        <button class="lightbox-zoom-btn" id="zoom-reset-btn" title="Reset">⟳</button>
+      </div>
+      <div class="zoom-indicator" id="zoom-indicator">100%</div>
     </div>
     <div id="lightbox-info">
       <div id="lightbox-title"></div>

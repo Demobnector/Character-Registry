@@ -644,6 +644,51 @@ body {
   padding: 10px 12px;
 }
 
+/* ===== GALLERY CATEGORY SECTIONS ===== */
+.gallery-category-section {
+  margin-bottom: 32px;
+}
+
+.gallery-category-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent);
+}
+
+.gallery-category-title {
+  font-family: var(--font-head);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent2);
+  text-transform: uppercase;
+}
+
+.gallery-category-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+  background: var(--bg3);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.gallery-category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+/* Optional: subtle divider between categories */
+.gallery-category-section:not(:last-child) {
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
 .cap-title {
   font-size: 13px;
   font-weight: 600;
@@ -990,6 +1035,193 @@ body {
 
 .habit-card div:last-child {
   line-height: 1.5;
+}
+/* ===== LIGHTBOX WITH FIXED TOOLBAR ===== */
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+#lightbox.open {
+  display: flex;
+}
+
+#lightbox-inner {
+  background: var(--bg2);
+  border-radius: var(--r2);
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 90vw;
+  height: 85vh;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Image wrap container - takes most of the space */
+#lightbox-img-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  min-height: 0;
+}
+
+/* The actual scrollable area */
+#lightbox-img-wrap {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: var(--bg);
+  cursor: zoom-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#lightbox-img-wrap.zoomed {
+  cursor: grab;
+}
+
+#lightbox-img-wrap.zoomed:active {
+  cursor: grabbing;
+}
+
+/* The image itself */
+#lightbox-img {
+  display: block;
+  margin: 0 auto;
+  transition: transform 0.2s ease;
+  transform-origin: center 0;  /* Make sure this is center center */
+  max-width: none;
+  width: auto;
+  height: auto;
+}
+
+/* Toolbar - positioned within img-container, not scrollable */
+.lightbox-toolbar {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 100;
+  pointer-events: auto;
+}
+
+.lightbox-zoom-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--border2);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--trans);
+  backdrop-filter: blur(4px);
+}
+
+.lightbox-zoom-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+
+/* Zoom indicator */
+.zoom-indicator {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--text2);
+  pointer-events: none;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+#lightbox-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--border2);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 100;
+  font-size: 18px;
+  backdrop-filter: blur(4px);
+  transition: all var(--trans);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#lightbox-close:hover {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+#lightbox-info {
+  padding: 12px 20px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+#lightbox-title {
+  font-family: var(--font-head);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+#lightbox-desc {
+  font-size: 12px;
+  color: var(--text2);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* Mobile adjustments */
+@media (max-width: 800px) {
+  .lightbox-toolbar {
+    bottom: 12px;
+    right: 12px;
+  }
+  
+  .zoom-indicator {
+    bottom: 12px;
+    left: 12px;
+  }
+  
+  .lightbox-zoom-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+  
+  #lightbox-close {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
 }
 @media (max-width: 800px) {
   #burger-btn {
