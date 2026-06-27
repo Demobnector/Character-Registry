@@ -30,21 +30,37 @@ window.registerCharacter({
     { label: "Eye (L / R)", value: "Blue / Red" }
   ],
   
+  galleryCategories: {
+	  order: ["official", "collab", "fanart"],
+	  names: {
+		official: "Official",
+		collab: "Collaborations and Fanart",
+	  },
+	  icons: {
+		official: "",      // Empty = no icon
+		collab: "",        // Empty = no icon
+	  }
+	},
+
+  
   gallery: [
-    { src: "monsterkillpose.png", title: "Mission Record Pose", date: "2024-05-14", description: "She decides to take a picture and pose as a proof that the mission is done." },
-    { src: null, title: "Face Study", date: "2026-02-28", description: "Close-up expression study — neutral to tense range." },
-    { src: null, title: "Casual Outfit", date: "2026-01-10", description: "" },
-    { src: "natasha.png", title: "Whole Body Picture", date: "2023-01-12", description: "" }
+    { src: "monsterkillpose.png", title: "Mission Record Pose", date: "2024-05-14", category: "official", description: "She decides to take a picture and pose as a proof that the mission is done." },
+    { src: "natasha.png", title: "Whole Body Picture", date: "2023-01-12", category: "official", description: "" },
+    
+    { src: "fanart.jpg", title: "Natasha's Fanart", date: "2026-06-07", category: "collab", description: "A fanart from a fellow artist, Kumi Riagi. She looks so cute there, I'd be squeeing for a long while just by staring at it." },
+    { src: "collab4_final.png", title: "Natasha & Belladona", date: "2026-06-02", category: "collab", description: "Collaborated with Dani. Made a poster with Belladona, a combat maid." },
+    { src: "collab3_final.png", title: "Natasha & Aeri 2", date: "2026-05-11", category: "collab", description: "Collaborated with Riagi. Just another moment of Natasha participating in a trend then decides to goof around." },
+    { src: "collab2_final.jpg", title: "Natasha & Aeri 1", date: "2026-05-09", category: "collab", description: "Collaborated with Riagi. Natasha going with a trend and goes along with it." },
   ],
   
   videos: [
     {
-      url: "animation.mp4",  // Auto-resolves to ./characters/natasha/videos/animation.mp4
+      url: "birthday_present.mp4",  // Auto-resolves to ./characters/natasha/videos/animation.mp4
       youtubeId: null,
-      title: "2026 Character Animation",
-      date: "2026-04-15",
-      description: "Full character animation sequence — movement and combat showcase. Represents notable personal growth over the earlier 2025 project.",
-      thumbnailUrl: "animation_thumb.png"  // Auto-resolves to ./characters/natasha/images/animation_thumb.png
+      title: "2026 Birthday Present",
+      date: "2026-03-30",
+      description: "Natasha handing over a gift to a fellow member inside the facility.",
+      thumbnailUrl: "birthday_thumbnail.png"  // Auto-resolves to ./characters/natasha/images/animation_thumb.png
     }
   ],
   
