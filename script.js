@@ -344,25 +344,293 @@ function switchTab(tab) {
 
 function renderOverview(char) {
   const ov = char.overview || {};
-  document.getElementById('tab-overview').innerHTML = `
-    <div class="overview-grid">
-      <div class="info-card"><div class="info-card-title">Identity</div>
-        ${ov.fullName ? `<div class="stat-row"><span class="stat-label">Full Name</span><span class="stat-value">${escapeHtml(ov.fullName)}</span></div>` : ''}
-        ${ov.height ? `<div class="stat-row"><span class="stat-label">Height</span><span class="stat-value">${escapeHtml(ov.height)}</span></div>` : ''}
-        ${ov.gender ? `<div class="stat-row"><span class="stat-label">Gender</span><span class="stat-value">${escapeHtml(ov.gender)}</span></div>` : ''}
-        ${ov.occupation ? `<div class="stat-row"><span class="stat-label">Occupation</span><span class="stat-value">${escapeHtml(ov.occupation)}</span></div>` : ''}
+  const overviewContainer = document.getElementById('tab-overview');
+  
+  // Define the order of fields to display
+  const fieldOrder = [
+    'fullName',
+    'age',
+    'birthday',
+    'height',
+    'gender',
+    'nationality',
+    'occupation',
+    'powers',
+    'likes',
+    'dislikes',
+    'hobbies',
+    'personalitySummary',
+    'backgroundSummary',
+    'relationshipBehavior',
+    'equipment'
+  ];
+  
+  // Define display labels for each field
+  const fieldLabels = {
+    fullName: 'Full Name',
+    age: 'Age',
+    birthday: 'Birthday',
+    height: 'Height',
+    gender: 'Gender',
+    nationality: 'Nationality',
+    occupation: 'Occupation',
+    powers: 'Powers & Abilities',
+    likes: 'Likes',
+    dislikes: 'Dislikes',
+    hobbies: 'Hobbies',
+    personalitySummary: 'Personality',
+    backgroundSummary: 'Background',
+    relationshipBehavior: 'Relationship',
+    equipment: 'Equipment / Fighting Style'
+  };
+  
+  // Helper to format field name
+  function getFieldLabel(key) {
+    if (fieldLabels[key]) return fieldLabels[key];
+    return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+  }
+  
+  // Helper to detect if text contains bullet points (lines starting with •, -, *, or numbers)
+  function hasBulletPoints(text) {
+    if (!text) return false;
+    const lines = text.split('\n').filter(line => line.trim());
+    return lines.some(line => /^[\s]*[•\-*0-9]/.test(line.trim()));
+  }
+  
+  // Helper to render bullet points as HTML list
+  function renderBulletPoints(text) {
+    if (!text) return '';
+    const lines = text.split('\n').filter(line => line.trim());
+    if (lines.length === 1 && !hasBulletPoints(text)) return `<p class="text-block">${escapeHtml(text)}</p>`;
+    
+    // Check if lines already have bullet markers
+    const hasMarkers = lines.some(line => /^[\s]*[•\-*0-9]/.test(line.trim()));
+    
+    let html = '<ul class="bullet-list">';
+    lines.forEach(line => {
+      let cleanLine = line.trim();
+      // Remove existing bullet markers if present (•, -, *, numbers)
+      if (hasMarkers) {
+        cleanLine = cleanLine.replace(/^[\s]*[•\-*0-9]+[\s]*\.?[\s]*/, '');
+      }
+      if (cleanLine) {
+        html += `<li>${escapeHtml(cleanLine)}</li>`;
+      }
+    });
+    html += '</ul>';
+    return html;
+  }
+  
+  // Helper to render different types of values
+  function renderFieldValue(key, value) {
+    if (value === undefined || value === null || value === '') return null;
+    
+    // Arrays (likes, dislikes, hobbies, powers)
+    if (Array.isArray(value)) {
+      if (value.length === 0) return null;
+      
+      // For powers, render as a styled list
+      if (key === 'powers') {
+        return `<ul class="bullet-list">${value.map(item => 
+          `<li>${escapeHtml(item)}</li>`
+        ).join('')}</ul>`;
+      }
+      
+      // For likes/dislikes/hobbies, render as pills
+      let className = '';
+      if (key === 'likes') className = 'pill like';
+      else if (key === 'dislikes') className = 'pill dislike';
+      else if (key === 'hobbies') className = 'pill hobby';
+      
+      return `<div class="list-pills">${value.map(item => 
+        `<span class="pill ${className}">${escapeHtml(item)}</span>`
+      ).join('')}</div>`;
+    }
+    
+    // String with bullet points
+    if (typeof value === 'string' && hasBulletPoints(value)) {
+      return renderBulletPoints(value);
+    }
+    
+    // Long text fields (paragraphs)
+    if (key === 'personalitySummary' || key === 'backgroundSummary' || 
+        key === 'relationshipBehavior' || key === 'equipment' ||
+        key === 'lore' || key === 'dailyLife') {
+      // Check if it has bullet points even within long text
+      if (hasBulletPoints(value)) {
+        return renderBulletPoints(value);
+      }
+      return `<p class="text-block">${escapeHtml(value)}</p>`;
+    }
+    
+    // Default: simple text
+    return `<span class="stat-value">${escapeHtml(value)}</span>`;
+  }
+  
+  // Helper to render a single field row
+  function renderField(key, value) {
+    if (value === undefined || value === null || value === '') return '';
+    
+    // Special handling for arrays
+    if (Array.isArray(value)) {
+      const rendered = renderFieldValue(key, value);
+      if (!rendered) return '';
+      
+      // If it's likes/dislikes/hobbies, they go in the Preferences card
+      if (key === 'likes' || key === 'dislikes' || key === 'hobbies') {
+        return rendered;
+      }
+      
+      // Powers get their own card
+      if (key === 'powers') {
+        return `
+          <div class="info-card overview-full">
+            <div class="info-card-title">${getFieldLabel(key)}</div>
+            ${rendered}
+          </div>
+        `;
+      }
+      
+      // Other arrays get a simple list
+      return `
+        <div class="stat-row">
+          <span class="stat-label">${getFieldLabel(key)}</span>
+          <span class="stat-value">${value.join(', ')}</span>
+        </div>
+      `;
+    }
+    
+    // Special handling for long text fields
+    if (key === 'personalitySummary' || key === 'backgroundSummary' || 
+        key === 'relationshipBehavior' || key === 'equipment' ||
+        key === 'lore' || key === 'dailyLife') {
+      const rendered = renderFieldValue(key, value);
+      if (!rendered) return '';
+      return `
+        <div class="info-card overview-full">
+          <div class="info-card-title">${getFieldLabel(key)}</div>
+          ${rendered}
+        </div>
+      `;
+    }
+    
+    // Default: simple stat row
+    return `
+      <div class="stat-row">
+        <span class="stat-label">${getFieldLabel(key)}</span>
+        <span class="stat-value">${escapeHtml(value)}</span>
       </div>
-      <div class="info-card"><div class="info-card-title">Preferences</div>
-        <div style="margin-bottom:12px;"><div style="font-size:11px;color:var(--text3);">LIKES</div><div class="list-pills">${(ov.likes || []).map(l => `<span class="pill like">${escapeHtml(l)}</span>`).join('')}</div></div>
-        <div><div style="font-size:11px;color:var(--text3);">DISLIKES</div><div class="list-pills">${(ov.dislikes || []).map(l => `<span class="pill dislike">${escapeHtml(l)}</span>`).join('')}</div></div>
+    `;
+  }
+  
+  // Build the overview HTML
+  let html = '';
+  
+  // --- Identity Card (basic info) ---
+  let identityFields = ['fullName', 'age', 'birthday', 'height', 'gender', 'nationality', 'occupation'];
+  let identityHtml = '';
+  identityFields.forEach(key => {
+    if (ov[key] !== undefined && ov[key] !== null && ov[key] !== '') {
+      identityHtml += renderField(key, ov[key]);
+    }
+  });
+  
+  if (identityHtml) {
+    html += `
+      <div class="info-card">
+        <div class="info-card-title">Identity</div>
+        ${identityHtml}
       </div>
-      <div class="info-card overview-full"><div class="info-card-title">Personality</div><p class="text-block">${escapeHtml(ov.personalitySummary || '')}</p></div>
-      <div class="info-card overview-full"><div class="info-card-title">Background</div><p class="text-block">${escapeHtml(ov.backgroundSummary || '')}</p></div>
-      <div class="info-card"><div class="info-card-title">Hobbies</div><div class="list-pills">${(ov.hobbies || []).map(h => `<span class="pill hobby">${escapeHtml(h)}</span>`).join('')}</div></div>
-      <div class="info-card"><div class="info-card-title">Relationship</div><p class="text-block">${escapeHtml(ov.relationshipBehavior || '')}</p></div>
-      <div class="info-card overview-full"><div class="info-card-title">Equipment / Fighting Style</div><p class="text-block">${escapeHtml(ov.equipment || '')}</p></div>
-    </div>
-  `;
+    `;
+  }
+  
+  // --- Preferences Card (likes & dislikes) ---
+  let likesHtml = '';
+  if (ov.likes && ov.likes.length > 0) {
+    likesHtml = `
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-bottom:6px;">LIKES</div>
+        ${renderFieldValue('likes', ov.likes)}
+      </div>
+    `;
+  }
+  
+  let dislikesHtml = '';
+  if (ov.dislikes && ov.dislikes.length > 0) {
+    dislikesHtml = `
+      <div>
+        <div style="font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-bottom:6px;">DISLIKES</div>
+        ${renderFieldValue('dislikes', ov.dislikes)}
+      </div>
+    `;
+  }
+  
+  if (likesHtml || dislikesHtml) {
+    html += `
+      <div class="info-card">
+        <div class="info-card-title">Preferences</div>
+        ${likesHtml}
+        ${dislikesHtml}
+      </div>
+    `;
+  }
+  
+  // --- Hobbies Card (if hobbies exist) ---
+  if (ov.hobbies && ov.hobbies.length > 0) {
+    html += `
+      <div class="info-card">
+        <div class="info-card-title">Hobbies</div>
+        ${renderFieldValue('hobbies', ov.hobbies)}
+      </div>
+    `;
+  }
+  
+  // --- Powers Card (if powers exist) ---
+  if (ov.powers && ov.powers.length > 0) {
+    html += `
+      <div class="info-card">
+        <div class="info-card-title">${getFieldLabel('powers')}</div>
+        <ul class="bullet-list">
+          ${ov.powers.map(power => `<li>${escapeHtml(power)}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  }
+  
+  // --- Long text fields (personality, background, relationship, equipment) ---
+  const longFields = ['personalitySummary', 'backgroundSummary', 'relationshipBehavior', 'equipment', 'lore', 'dailyLife'];
+  longFields.forEach(key => {
+    if (ov[key] !== undefined && ov[key] !== null && ov[key] !== '') {
+      html += renderField(key, ov[key]);
+    }
+  });
+  
+  // --- Any other fields not explicitly handled ---
+  const handledFields = new Set([...fieldOrder, 'likes', 'dislikes', 'hobbies', 'personalitySummary', 'backgroundSummary', 'relationshipBehavior', 'equipment', 'lore', 'dailyLife', 'powers']);
+  Object.keys(ov).forEach(key => {
+    if (!handledFields.has(key) && ov[key] !== undefined && ov[key] !== null && ov[key] !== '') {
+      // If it's an array, render as list
+      if (Array.isArray(ov[key])) {
+        html += `
+          <div class="info-card">
+            <div class="info-card-title">${getFieldLabel(key)}</div>
+            <ul class="bullet-list">${ov[key].map(item => 
+              `<li>${escapeHtml(item)}</li>`
+            ).join('')}</ul>
+          </div>
+        `;
+      } else {
+        html += renderField(key, ov[key]);
+      }
+    }
+  });
+  
+  // Wrap everything in a grid
+  if (html) {
+    overviewContainer.innerHTML = `<div class="overview-grid">${html}</div>`;
+  } else {
+    overviewContainer.innerHTML = '<div class="empty-state" style="padding:48px;text-align:center;">No overview information available.</div>';
+  }
 }
 
 function renderGallery(char) {

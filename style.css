@@ -1036,6 +1036,54 @@ body {
 .habit-card div:last-child {
   line-height: 1.5;
 }
+
+/* ===== BULLET LISTS ===== */
+.bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bullet-list li {
+  position: relative;
+  padding: 6px 0 6px 24px;
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.6;
+  border-bottom: 1px solid var(--border);
+}
+
+.bullet-list li:last-child {
+  border-bottom: none;
+}
+
+.bullet-list li::before {
+  content: '▸';
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  color: var(--accent);
+  font-size: 14px;
+}
+
+/* Alternative bullet style using dots */
+.bullet-list.style-dots li::before {
+  content: '•';
+  font-size: 18px;
+  top: 4px;
+  color: var(--accent2);
+}
+
+/* For nested bullet lists within text blocks */
+.text-block .bullet-list {
+  margin-top: 10px;
+}
+
+.text-block .bullet-list li {
+  border-bottom: none;
+  padding: 4px 0 4px 24px;
+}
+
 /* ===== LIGHTBOX WITH FIXED TOOLBAR ===== */
 #lightbox {
   display: none;
