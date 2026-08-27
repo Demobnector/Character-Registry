@@ -69,7 +69,8 @@ Years of expedition work have refined her instincts, making experience her great
     { src: "monsterkillpose.png", title: "Mission Record Pose", date: "2024-05-14", category: "official", description: "She decides to take a picture and pose as a proof that the mission is done." },
     { src: "natasha.png", title: "Whole Body Picture", date: "2023-01-12", category: "official", description: "" },
     
-    { src: "fanart.jpg", title: "Natasha's Fanart", date: "2026-06-07", category: "collab", description: "A fanart from a fellow artist, Kumi Riagi. She looks so cute there, I'd be squeeing for a long while just by staring at it." },
+    { src: "fanart1.jpg", title: "Natasha's Fanart 1", date: "2026-06-07", category: "collab", description: "A fanart from a fellow artist, Kumi Riagi. She looks so cute there, I'd be squeeing for a long while just by staring at it." },
+    { src: "fanart2.jpg", title: "Natasha's Fanart 2", date: "2026-08-27", category: "collab", description: "Fanart from Dani. He really went wild with the shifted perspective here!" },
     { src: "collab4_final.png", title: "Natasha & Belladona", date: "2026-06-02", category: "collab", description: "Collaborated with Dani. Made a poster with Belladona, a combat maid." },
     { src: "collab3_final.png", title: "Natasha & Aeri 2", date: "2026-05-11", category: "collab", description: "Collaborated with Riagi. Just another moment of Natasha participating in a trend then decides to goof around." },
     { src: "collab2_final.jpg", title: "Natasha & Aeri 1", date: "2026-05-09", category: "collab", description: "Collaborated with Riagi. Natasha going with a trend and goes along with it." },
